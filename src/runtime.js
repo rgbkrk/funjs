@@ -1,4 +1,4 @@
-// Here is where we inject our own API for our JavaScript runtime
+// Injecting our own runtime API into the globalThis object.
 ((globalThis) => {
   const core = Deno.core;
   function argsToMessage(...args) {
@@ -18,7 +18,7 @@
   globalThis.console.log(core.initializeAsyncOps);
 
   // core.initializeAsyncOps();
-  globalThis.runjs = {
+  globalThis.fun = {
     readFile: (path) => {
       return core.ops.op_read_file(path);
     },

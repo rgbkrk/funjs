@@ -21,10 +21,10 @@ fn op_remove_file(path: String) -> Result<(), AnyError> {
     Ok(())
 }
 
-async fn run_js(file_path: &str) -> Result<(), AnyError> {
+async fn fun_js(file_path: &str) -> Result<(), AnyError> {
     let main_module = deno_core::resolve_path(file_path, &std::env::current_dir().unwrap())?;
 
-    let runjs_extension = Extension::builder("runjs")
+    let funjs_extension = Extension::builder("funjs")
         .ops(vec![
             op_read_file::decl(),
             op_write_file::decl(),
@@ -34,12 +34,12 @@ async fn run_js(file_path: &str) -> Result<(), AnyError> {
 
     let mut js_runtime = deno_core::JsRuntime::new(deno_core::RuntimeOptions {
         module_loader: Some(Rc::new(deno_core::FsModuleLoader)),
-        extensions: vec![runjs_extension],
+        extensions: vec![funjs_extension],
         ..Default::default()
     });
 
     js_runtime
-        .execute_script_static("[runjs:runtime.js]", include_str!("./runtime.js"))
+        .execute_script_static("[funjs:runtime.js]", include_str!("./runtime.js"))
         .unwrap();
 
     let mod_id = js_runtime.load_main_module(&main_module, None).await?;
@@ -54,7 +54,7 @@ fn main() {
         .build()
         .unwrap();
 
-    if let Err(error) = runtime.block_on(run_js("example.js")) {
+    if let Err(error) = runtime.block_on(fun_js("example.js")) {
         eprintln!("Error: {}", error);
     }
 }
