@@ -21,6 +21,12 @@ fn op_remove_file(path: String) -> Result<(), AnyError> {
     Ok(())
 }
 
+#[op]
+async fn op_fetch(url: String) -> Result<String, AnyError> {
+    let body = reqwest::get(url).await?.text().await?;
+    Ok(body)
+}
+
 async fn fun_js(file_path: &str) -> Result<(), AnyError> {
     let main_module = deno_core::resolve_path(file_path, &std::env::current_dir().unwrap())?;
 
@@ -29,6 +35,7 @@ async fn fun_js(file_path: &str) -> Result<(), AnyError> {
             op_read_file::decl(),
             op_write_file::decl(),
             op_remove_file::decl(),
+            op_fetch::decl(),
         ])
         .build();
 

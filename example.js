@@ -1,20 +1,7 @@
-console.log("Time for ✨ funjs ✨");
+console.log("Welcome to FunJS 🤩");
 
-console.error("💥!");
+const content = await fun.fetch(
+  "https://example.org",
+);
 
-const path = "./log.txt";
-
-try {
-  const contents = await runjs.readFile(path);
-  console.log("Read from log: ", contents);
-} catch (err) {
-  console.error("Error reading from log: ", err);
-}
-
-await fun.writeFile(path, `Rand: ${Math.random()}`);
-const contents = await fun.readFile(path);
-
-console.log("Read from log: ", contents);
-console.log("Removing log file");
-await fun.removeFile(path);
-console.log("Removed log file");
+console.log(content.slice(0, 20));
