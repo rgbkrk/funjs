@@ -47,7 +47,7 @@ impl deno_core::ModuleLoader for TsModuleLoader {
     fn load(
         &self,
         module_specifier: &deno_core::ModuleSpecifier,
-        _maybe_referrer: Option<deno_core::ModuleSpecifier>,
+        _maybe_referrer: Option<&deno_core::ModuleSpecifier>,
         _is_dyn_import: bool,
     ) -> std::pin::Pin<Box<deno_core::ModuleSourceFuture>> {
         let module_specifier = module_specifier.clone();
@@ -87,12 +87,7 @@ impl deno_core::ModuleLoader for TsModuleLoader {
                 code
             };
 
-            let module = deno_core::ModuleSource {
-                code: code.into(),
-                module_type,
-                module_url_specified: module_specifier.into(),
-                module_url_found: module_specifier.to_string().into(),
-            };
+            let module = deno_core::ModuleSource::new(module_type, code.into(), &module_specifier);
             Ok(module)
         }
         .boxed_local()
@@ -112,7 +107,7 @@ async fn fun_js(file_path: &str) -> Result<(), AnyError> {
         .build();
 
     let mut js_runtime = deno_core::JsRuntime::new(deno_core::RuntimeOptions {
-        module_loader: Some(Rc::new(deno_core::FsModuleLoader)),
+        module_loader: Some(Rc::new(TsModuleLoader)),
         extensions: vec![funjs_extension],
         ..Default::default()
     });
