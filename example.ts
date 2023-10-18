@@ -1,6 +1,13 @@
 console.log("Welcome to FunJS 🤩");
 
-const content = await fun.fetch(
+interface Cat {
+  name: string;
+  age: number;
+}
+
+let content: string;
+
+content = await fun.fetch(
   "https://example.org",
 );
 
